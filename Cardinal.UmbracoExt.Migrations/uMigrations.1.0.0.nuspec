@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>uMigrations</id>
+        <version>1.0.0</version>
+        <authors>aswerlick</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Migrations frameworkf for ubuntu</description>
+        <dependencies>
+            <dependency id="UmbracoCms" version="6.1.6" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="content\umigrations.config.pp" target="content\config" />
+        <file src="content\SampleScript.cs.pp" target="content\Migrations" />
+        <file src="bin\Debug\Cardinal.UmbracoExt.Migrations.dll" target="lib\net45\Cardinal.UmbracoExt.Migrations.dll"/>
+    </files>
+</package>

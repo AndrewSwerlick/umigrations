@@ -43,6 +43,13 @@ namespace Cardinal.UmbracoExt.Migrations
         {
             get { return (string)this["assembly"]; }
             set { this["assembly"] = value; }
+        }
+
+        [ConfigurationProperty("rerun", DefaultValue = "false", IsRequired = true)]
+        public bool ReRun
+        {
+            get { return (bool)this["rerun"]; }
+            set { this["rerun"] = value; }
         }  
     }    
       
@@ -68,6 +75,7 @@ namespace Cardinal.UmbracoExt.Migrations
             TargetVersion = settings.VersionNumber;
             ScriptsNameSpace = settings.ScriptsNamespace;
             Assembly = settings.Assembly;
+            ReRunLastScript = settings.ReRun;
         }
 
         public MigrationsSettings()
@@ -80,6 +88,8 @@ namespace Cardinal.UmbracoExt.Migrations
         public string ScriptsNameSpace { get; set; }
 
         public string Assembly { get; set; }
+
+        public bool ReRunLastScript { get; set; }
     }
 }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Cardinal.UmbracoExt.Migrations.Tests.DependentScripts;
 using Cardinal.UmbracoExt.Migrations.Tests.MigrationScripts;
+using Cardinal.UmbracoExt.Migrations.Tests.OneScript;
 using Cardinal.UmbracoExt.Migrations.Tests.TestInfrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -121,6 +122,38 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
         }
 
         [TestMethod]
+        public void
+            Ensure_That_If_The_Settings_Say_To_Re_Run_The_Last_Script_The_Migration_Manager_Will_Run_The_Last_Script_Only_During_A_Second_Migration
+            ()
+        {
+            MigrationContext.Settings.ScriptsNameSpace = typeof(Script1).Namespace;
+            MigrationContext.Settings.Assembly = Assembly.GetExecutingAssembly().FullName;
+            MigrationContext.Settings.ReRunLastScript = true;
+            var manager = new MigrationManager(MigrationContext);
+            manager.Migrate();
+            new MigrationManager(new MigrationContext(MigrationContext.AppContext, MigrationContext.Settings)).Migrate();
+
+            Assert.IsTrue(MigrationContext.AppContext.DatabaseContext.Database.TableExist("CustomModel"));
+            var countOfTest = MigrationContext.AppContext.Services.ContentTypeService.GetAllContentTypes().Count(c => c.Name == "Test");
+            Assert.AreEqual(1, countOfTest);
+            Assert.AreEqual(2,MigrationContext.AppContext.DatabaseContext.Database.Query<CustomModel>("SELECT * FROM CustomModel").Count());
+        }
+
+        [TestMethod]
+        public void Ensure_The_ReRun_Setting_Works_When_There_Is_Only_One_Migration_Script()
+        {
+            MigrationContext.Settings.ScriptsNameSpace = typeof(SingleScript).Namespace;
+            MigrationContext.Settings.Assembly = Assembly.GetExecutingAssembly().FullName;
+            MigrationContext.Settings.ReRunLastScript = true;
+            var manager = new MigrationManager(MigrationContext);
+            manager.Migrate();
+
+            var countOfTest = MigrationContext.AppContext.Services.ContentTypeService.GetAllContentTypes().Count(c => c.Name == "Test");
+            Assert.AreEqual(1, countOfTest);
+        }
+
+
+        [TestMethod]
         public void Ensure_That_Running_A_Migration_Twice_Doesnt_Result_In_The_Scripts_Running_Twice()
         {
             MigrationContext.Settings.ScriptsNameSpace = typeof(Script1).Namespace;
@@ -133,6 +166,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             var countOfTest = MigrationContext.AppContext.Services.ContentTypeService.GetAllContentTypes().Count(c => c.Name == "Test");
             Assert.AreEqual(1,countOfTest);
         }
+
 
         [ClassCleanup]
         public static void Cleanup()

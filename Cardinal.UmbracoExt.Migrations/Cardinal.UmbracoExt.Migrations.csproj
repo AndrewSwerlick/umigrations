@@ -197,6 +197,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="content\SampleScript.cs.pp" />
+    <Compile Include="Builders\ContentBuilder.cs" />
+    <Compile Include="Builders\ContentTypeBuilder.cs" />
+    <Compile Include="Builders\MemberTypeBuilder.cs" />
+    <Compile Include="Builders\PropertyDTO.cs" />
+    <Compile Include="Builders\TemplateBuilder.cs" />
     <Compile Include="IMigrationScript.cs" />
     <Compile Include="MigrationContext.cs" />
     <Compile Include="MigrationManager.cs" />
@@ -208,7 +214,9 @@
     <Compile Include="VersionNumberAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="content\umigrations.config.pp" />
     <None Include="packages.config" />
+    <None Include="uMigrations.1.0.0.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
@@ -216,7 +224,11 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <CallTarget Targets="BuildPackage" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>$(NuGetCommand) pack "$(MSBuildProjectDirectory)\uMigrations.1.0.0.nuspec" -Properties "Configuration=$(Configuration);Platform=$(Platform)" $(NonInteractiveSwitch) -OutputDirectory "$(PackageOutputDir)" -symbols</PostBuildEvent>
+  </PropertyGroup>
 </Project>

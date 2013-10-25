@@ -98,3 +98,7 @@ _vti_pvt/
 #Ignore umbraco folder (should be added by package restore)
 */umbraco/*
 */umbraco_client/*
+
+*/App_Data/TEMP/*
+*/App_Data/Logs/*
+

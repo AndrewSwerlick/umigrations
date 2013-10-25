@@ -216,7 +216,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTestClass.cs" />
+    <Compile Include="ContentTypeBuilderTests.cs" />
     <Compile Include="MigrationContextTests.cs" />
+    <Compile Include="OneScript\SingleScript.cs" />
     <Compile Include="TestInfrastructure\CustomModel.cs" />
     <Compile Include="DependentScripts\DependentScript1.cs" />
     <Compile Include="DependentScripts\DependentScript2.cs" />

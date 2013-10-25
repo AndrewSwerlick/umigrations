@@ -14,7 +14,8 @@ namespace Cardinal.UmbracoExt.Migrations.Tests.MigrationScripts
     {
         public void Execute(ApplicationContext context)
         {
-            context.DatabaseContext.Database.CreateTable<CustomModel>();  
+            context.DatabaseContext.Database.CreateTable<CustomModel>();
+            context.DatabaseContext.Database.Insert(new CustomModel {Name = "test"});
         }
     }
 }

@@ -110,7 +110,21 @@ namespace Cardinal.UmbracoExt.Migrations
 
             if(_context.From == null || _context.To == null)
                 throw new InvalidOperationException("Cannot determine what version to migration to or from");
-           
+
+            if (_context.Settings.ReRunLastScript)
+            {
+                if (_scripts.Count > 1)
+                {
+                    var scriptBeforeLastNumber =
+                        _scripts.Where(v => v.Key < _context.To).OrderByDescending(v => v.Key).First().Key;
+                    _context.From = scriptBeforeLastNumber < _context.From ? scriptBeforeLastNumber : _context.From;
+                }
+                else
+                {
+                    _context.From = new VersionNumber("0.0");
+                }
+            }
+
             Migrate(_context.From,_context.To);
         }
     }
