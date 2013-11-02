@@ -7,8 +7,8 @@ using Cardinal.UmbracoExt.Migrations.Tests.DependentScripts;
 using Cardinal.UmbracoExt.Migrations.Tests.MigrationScripts;
 using Cardinal.UmbracoExt.Migrations.Tests.OneScript;
 using Cardinal.UmbracoExt.Migrations.Tests.TestInfrastructure;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence;
@@ -19,22 +19,15 @@ using File = System.IO.File;
 
 namespace Cardinal.UmbracoExt.Migrations.Tests
 {    
-    [TestClass]
     public class MigrationManagerTests : BaseTestClass
     {     
-        [ClassInitialize]
-        public static void Initialize(TestContext MigrationContext)
-        {
-            BaseTestClass.Initialize(MigrationContext);
-        }
-
-        [TestMethod]
+        [Test]
         public void Ensure_We_Can_Create_A_Migration_Manager()
         {
             var manager = new MigrationManager(MigrationContext);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_We_Prepare_A_Database_For_Migrations()
         {
 
@@ -43,7 +36,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(MigrationContext.AppContext.DatabaseContext.Database.TableExist("Migrations"));
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_We_Can_Run_A_Deployment_Script_Which_Adds_A_Document_Type()
         {
             var manager = new MigrationManager(MigrationContext);
@@ -57,7 +50,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(testExists);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_We_Can_Run_A_Deployment_Script_Which_Adds_A_Custom_Table()
         {            
             var manager = new MigrationManager(MigrationContext);
@@ -69,7 +62,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(MigrationContext.AppContext.DatabaseContext.Database.TableExist("CustomModel"));
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_We_Can_Register_Scripts_By_Namespace()
         {
             var manager = new MigrationManager(MigrationContext);
@@ -80,7 +73,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.AreEqual(manager.Scripts.Count(), 2);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_We_Can_Run_A_Migration_With_The_Scripts_In_The_Migration_Scripts_Folders()
         {
             var manager = new MigrationManager(MigrationContext);
@@ -94,7 +87,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(testExists);
         }
         
-        [TestMethod]
+        [Test]
         public void Ensure_That_Scripts_That_Depend_On_Each_Other_Are_Run_In_Order()
         {
             var manager = new MigrationManager(MigrationContext);
@@ -108,7 +101,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(test.PropertyTypeExists("test"));
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_That_We_Can_Run_A_Migration_Using_The_Parameterless_Method()
         {
             MigrationContext.Settings.ScriptsNameSpace = typeof (Script1).Namespace;
@@ -121,7 +114,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(testExists);
         }
 
-        [TestMethod]
+        [Test]
         public void
             Ensure_That_If_The_Settings_Say_To_Re_Run_The_Last_Script_The_Migration_Manager_Will_Run_The_Last_Script_Only_During_A_Second_Migration
             ()
@@ -139,7 +132,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.AreEqual(2,MigrationContext.AppContext.DatabaseContext.Database.Query<CustomModel>("SELECT * FROM CustomModel").Count());
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_The_ReRun_Setting_Works_When_There_Is_Only_One_Migration_Script()
         {
             MigrationContext.Settings.ScriptsNameSpace = typeof(SingleScript).Namespace;
@@ -153,7 +146,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void Ensure_That_Running_A_Migration_Twice_Doesnt_Result_In_The_Scripts_Running_Twice()
         {
             MigrationContext.Settings.ScriptsNameSpace = typeof(Script1).Namespace;
@@ -168,8 +161,8 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
         }
 
 
-        [ClassCleanup]
-        public static void Cleanup()
+        [TestFixtureTearDown]
+        public void Cleanup()
         {
             BaseTestClass.Cleanup();
         }

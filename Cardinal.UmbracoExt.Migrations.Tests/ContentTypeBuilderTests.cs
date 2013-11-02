@@ -4,28 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cardinal.UmbracoExt.Migrations.Builders;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Umbraco.Core.Models;
 
 namespace Cardinal.UmbracoExt.Migrations.Tests
 {
-    [TestClass]
     class ContentTypeBuilderTests : BaseTestClass
-    {
-        [ClassInitialize]
-        public static void Initialize(TestContext MigrationContext)
-        {
-            BaseTestClass.Initialize(MigrationContext);
-        }
-
-        [TestMethod]
+    {       
+        [Test]
         public void Ensure_We_Can_Build_A_Content_Type_Builder()
         {
             var builder = new ContentTypeBuilder("Test", "Test");
             Assert.IsNotNull(builder);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_When_We_Call_The_Build_Method_On_The_Builder_It_Creates_The_Content_Type_If_It_Doesnt_Exist()
         {
             var contentType = new ContentTypeBuilder("Test", "Test").Build(Context);
@@ -33,7 +26,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(testExists);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_When_We_Call_The_Build_Method_On_The_Builder_Twice_It_Doesnt_Create_The_Type_Again()
         {
             var builder = new ContentTypeBuilder("Test", "Test");
@@ -43,7 +36,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.AreEqual(1, numberOfTest);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_When_We_Call_The_Build_Method_On_The_Builder_With_A_Property_It_Creates_The_Property()
         {
             var contentType = new ContentTypeBuilder("Test", "Test")
@@ -53,7 +46,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsTrue(test.PropertyTypeExists("myProp"));
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_When_We_Call_The_Build_Method_On_The_Builder_With_The_Same_Property_Twice_It_Creates_The_Property_Once()
         {
             var contentType = new ContentTypeBuilder("Test", "Test")
@@ -64,7 +57,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.AreEqual(1, test.PropertyTypes.Count(p=> p.Alias == "myProp"));
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_If_We_Call_The_Create_Template_Method_It_Creates_A_Template_And_Sets_It_As_A_Default()
         {
             var contentType = new ContentTypeBuilder("Test", "Test")
@@ -75,7 +68,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsNotNull(test.DefaultTemplate);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_If_Call_Add_Allowed_ContentTypes_The_Othertypes_Are_Registered_As_Allowed_Types()
         {
             var contentType = new ContentTypeBuilder("Test", "Test").Build(Context);
@@ -86,12 +79,6 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
 
             var test = MigrationContext.AppContext.Services.ContentTypeService.GetAllContentTypes().Single(c => c.Name == "Test2");
             Assert.IsTrue(test.AllowedContentTypes.Any(c=> c.Alias == contentType.Alias));
-        }
-
-        [ClassCleanup]
-        public static void Cleanup()
-        {
-            BaseTestClass.Cleanup();
         }
     }
 }

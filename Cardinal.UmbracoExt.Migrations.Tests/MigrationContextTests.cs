@@ -5,20 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Cardinal.UmbracoExt.Migrations.Tests.MigrationScripts;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Cardinal.UmbracoExt.Migrations.Tests
 {
-    [TestClass]
     public class MigrationContextTests : BaseTestClass
-    {
-        [ClassInitialize]
-        public static void Initialize(TestContext context)
-        {
-            BaseTestClass.Initialize(context);
-        }
-
-        [TestMethod]
+    {      
+        [Test]
         public void Ensure_That_We_Can_Create_A_MigrationContext()
         {
             var settings = new MigrationsSettings()
@@ -32,7 +25,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.IsNotNull(context);
         }
 
-        [TestMethod]
+        [Test]
         public void Ensure_That_The_Migration_Context_Sets_The_From_Value_To_Zero_With_A_New_Database()
         {
             var settings = new MigrationsSettings()
@@ -45,7 +38,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.AreEqual(new VersionNumber("0"), context.From);
         }
 
-        [TestMethod]
+        [Test]
         public void
             If_There_Is_Already_A_Migration_Record_In_The_Database_Ensure_The_Context_Sets_The_From_Value_To_The_Last_Migration
             ()
@@ -61,7 +54,7 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Assert.AreEqual(new VersionNumber("1.0"), context.From);            
         }
 
-        [TestMethod]
+        [Test]
         public void
             If_The_To_Value_Is_Set_In_The_Settings_Ensure_The_Migration_Context_Set_The_To_Value_To_SameSetting
             ()

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cardinal.UmbracoExt.Migrations.Tests.TestInfrastructure;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 
@@ -21,8 +21,8 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
         public static MigrationContext MigrationContext { get; set; }
         public static TestApplicationBase Application { get; set; }
 
-        [ClassInitialize]
-        public static void Initialize(TestContext context)
+        [TestFixtureSetUp]
+        public static void Initialize()
         {
             try
             {
@@ -40,18 +40,18 @@ namespace Cardinal.UmbracoExt.Migrations.Tests
             Context.DatabaseContext.Database.CreateDatabaseSchema();
         }
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             MigrationContext = new MigrationContext(Context, new MigrationsSettings());
         }
-        [ClassCleanup]
+        [TestFixtureTearDown]
         public static void Cleanup()
         {
             File.Delete(FILE_NAME);
         }
 
-        [TestCleanup]
+        [TearDown]
         public void TestCleanup()
         {            
             File.Delete(FILE_NAME);
